@@ -17,6 +17,8 @@ class FollowRequest < ApplicationRecord
     :uniqueness => { :scope => [:sender_id] }
   })
 
+  scope :accepted, -> { where({ :status => "accepted" }) }
+
   # Association accessor methods to define:
   
   ## Direct associations

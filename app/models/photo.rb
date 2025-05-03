@@ -21,65 +21,79 @@ class Photo < ApplicationRecord
 
   # Photo#poster: returns a row from the users table associated to this photo by the owner_id column
 
+  belongs_to(:poster,
+    class_name: "User",
+    foreign_key: "owner_id",
+    required: true
+  )
+
   # Photo#comments: returns rows from the comments table associated to this photo by the photo_id column
+  
+  has_many(:comments)
 
   # Photo#likes: returns rows from the likes table associated to this photo by the photo_id column
+
+  has_many(:likes)
 
   ## Indirect associations
 
   # Photo#fans: returns rows from the users table associated to this photo through its likes
 
-  def poster
-    my_owner_id = self.owner_id
+  has_many(:fans,
+    through: :likes
+  )
 
-    matching_users = User.where({ :id => my_owner_id })
+#   def poster
+#     my_owner_id = self.owner_id
 
-    the_user = matching_users.at(0)
+#     matching_users = User.where({ :id => my_owner_id })
 
-    return the_user
-  end
+#     the_user = matching_users.at(0)
 
-  def comments
-    my_id = self.id
+#     return the_user
+#   end
 
-    matching_comments = Comment.where({ :photo_id => self.id })
+#   def comments
+#     my_id = self.id
 
-    return matching_comments
-  end
+#     matching_comments = Comment.where({ :photo_id => self.id })
 
-  def likes
-    my_id = self.id
+#     return matching_comments
+#   end
 
-    matching_likes = Like.where({ :photo_id => self.id })
+#   def likes
+#     my_id = self.id
 
-    return matching_likes
-  end
+#     matching_likes = Like.where({ :photo_id => self.id })
 
-  def fans
-    my_likes = self.likes
+#     return matching_likes
+#   end
+
+#   def fans
+#     my_likes = self.likes
     
-    array_of_user_ids = Array.new
+#     array_of_user_ids = Array.new
 
-    my_likes.each do |a_like|
-      array_of_user_ids.push(a_like.fan_id)
-    end
+#     my_likes.each do |a_like|
+#       array_of_user_ids.push(a_like.fan_id)
+#     end
 
-    matching_users = User.where({ :id => array_of_user_ids })
+#     matching_users = User.where({ :id => array_of_user_ids })
 
-    return matching_users
-  end
+#     return matching_users
+#   end
 
-  def fan_list
-    my_fans = self.fans
+#   def fan_list
+#     my_fans = self.fans
 
-    array_of_usernames = Array.new
+#     array_of_usernames = Array.new
 
-    my_fans.each do |a_user|
-      array_of_usernames.push(a_user.username)
-    end
+#     my_fans.each do |a_user|
+#       array_of_usernames.push(a_user.username)
+#     end
 
-    formatted_usernames = array_of_usernames.to_sentence
+#     formatted_usernames = array_of_usernames.to_sentence
 
-    return formatted_usernames
-  end
+#     return formatted_usernames
+#   end
 end

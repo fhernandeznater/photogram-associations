@@ -24,16 +24,21 @@ class Photo < ApplicationRecord
   belongs_to(:poster,
     class_name: "User",
     foreign_key: "owner_id",
-    required: true
   )
 
   # Photo#comments: returns rows from the comments table associated to this photo by the photo_id column
   
-  has_many(:comments)
+  has_many(:comments,
+    class_name: "Comment",
+    foreign_key: "photo_id"
+  )
 
   # Photo#likes: returns rows from the likes table associated to this photo by the photo_id column
 
-  has_many(:likes)
+  has_many(:likes,
+    class_name: "Like",
+    foreign_key: "photo_id"
+  )
 
   ## Indirect associations
 
